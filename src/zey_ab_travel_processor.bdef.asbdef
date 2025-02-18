@@ -1,0 +1,39 @@
+projection;
+strict ( 2 );
+use draft;
+define behavior for ZEY_AB_TRAVEL_PROCESSOR alias Travel
+implementation in class zbp_ey_ab_travel_proc unique
+{
+
+  use action copyTravel;
+
+  use action activate;
+  use action prepare;
+  use action edit;
+  use action discard;
+  use action resume;
+
+  use create (precheck, augment);
+  use update (precheck);
+  use delete;
+
+  use association _Booking { create; with draft; }
+}
+
+define behavior for ZEY_AB_BOOKING_PROCESSOR alias Booking
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _BookingSupplement { create; with draft; }
+}
+
+define behavior for ZEY_AB_BOOKING_SUPPL_PROCESSOR alias BookingSuppl
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _Booking;
+}
